@@ -13,6 +13,9 @@ import { ContextKeyExpr, IContextKeyService } from 'vs/platform/contextkey/commo
 import { ICommandService } from 'vs/platform/commands/common/commands';
 import { IDisposable } from 'vs/base/common/lifecycle';
 import Event from 'vs/base/common/event';
+import { IdGenerator } from 'vs/base/common/idGenerator';
+import { createCSSRule } from 'vs/base/browser/dom';
+import URI from 'vs/base/common/uri';
 
 export interface ILocalizedString {
 	value: string;
@@ -23,8 +26,7 @@ export interface ICommandAction {
 	id: string;
 	title: string | ILocalizedString;
 	category?: string | ILocalizedString;
-	iconClass?: string;
-	iconPath?: string;
+	iconPath?: string | { light: string; dark: string; };
 	precondition?: ContextKeyExpr;
 }
 
@@ -165,6 +167,8 @@ export class ExecuteCommandAction extends Action {
 	}
 }
 
+const ids = new IdGenerator('menu-item-action-icon-');
+
 export class MenuItemAction extends ExecuteCommandAction {
 
 	private _options: IMenuActionOptions;
@@ -180,9 +184,20 @@ export class MenuItemAction extends ExecuteCommandAction {
 		@ICommandService commandService: ICommandService
 	) {
 		typeof item.title === 'string' ? super(item.id, item.title, commandService) : super(item.id, item.title.value, commandService);
-		this._cssClass = item.iconClass;
 		this._enabled = !item.precondition || contextKeyService.contextMatchesRules(item.precondition);
 		this._options = options || {};
+
+		if (item.iconPath) {
+			const iconClass = ids.nextId();
+			if (typeof item.iconPath === 'string') {
+				createCSSRule(`.icon.${iconClass}`, `background-image: url("${URI.file(item.iconPath).toString()}")`);
+			} else {
+				createCSSRule(`.icon.${iconClass}`, `background-image: url("${URI.file(item.iconPath.light).toString()}")`);
+				createCSSRule(`.vs-dark .icon.${iconClass}, .hc-black .icon.${iconClass}`, `background-image: url("${URI.file(item.iconPath.dark).toString()}")`);
+			}
+
+			this._cssClass = iconClass;
+		}
 
 		this.item = item;
 		this.alt = alt ? new MenuItemAction(alt, undefined, this._options, contextKeyService, commandService) : undefined;

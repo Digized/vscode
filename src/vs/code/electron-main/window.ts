@@ -608,7 +608,7 @@ export class CodeWindow implements ICodeWindow {
 
 		const theme = this.stateService.getItem<string>(CodeWindow.themeStorageKey, 'vs-dark');
 
-		return theme.split(' ')[0];
+		return theme.split(' ') [0];
 	}
 
 	private getBackgroundColor(): string {
@@ -748,7 +748,7 @@ export class CodeWindow implements ICodeWindow {
 
 		// Multi Montior (fullscreen): try to find the previously used display
 		if (state.display && state.mode === WindowMode.Fullscreen) {
-			const display = displays.filter(d => d.id === state.display)[0];
+			const display = displays.filter(d => d.id === state.display) [0];
 			if (display && display.bounds && typeof display.bounds.x === 'number' && typeof display.bounds.y === 'number') {
 				const defaults = defaultWindowState(WindowMode.Fullscreen); // make sure we have good values when the user restores the window
 				defaults.x = display.bounds.x; // carefull to use displays x/y position so that the window ends up on the correct monitor
@@ -953,7 +953,7 @@ export class CodeWindow implements ICodeWindow {
 		const segments: ITouchBarSegment[] = items.map(item => {
 			let icon: Electron.NativeImage;
 			if (item.iconPath) {
-				icon = nativeImage.createFromPath(item.iconPath);
+				icon = nativeImage.createFromPath(typeof item.iconPath === 'string' ? item.iconPath : item.iconPath.dark);
 				if (icon.isEmpty()) {
 					icon = void 0;
 				}
