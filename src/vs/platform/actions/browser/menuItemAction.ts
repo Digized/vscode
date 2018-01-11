@@ -16,6 +16,8 @@ const ids = new IdGenerator('menu-item-action-icon-');
 
 export class MenuItemAction extends ExecuteCommandAction {
 
+	static readonly ICON_PATH_TO_CSS_RULES: Map<string /* path*/, string /* CSS rule */> = new Map<string, string>();
+
 	private _options: IMenuActionOptions;
 
 	readonly item: ICommandAction;
@@ -33,12 +35,24 @@ export class MenuItemAction extends ExecuteCommandAction {
 		this._options = options || {};
 
 		if (item.iconPath) {
-			const iconClass = ids.nextId();
+			let iconClass: string;
 			if (typeof item.iconPath === 'string') {
-				createCSSRule(`.icon.${iconClass}`, `background-image: url("${URI.file(item.iconPath).toString()}")`);
+				if (MenuItemAction.ICON_PATH_TO_CSS_RULES.has(item.iconPath)) {
+					iconClass = MenuItemAction.ICON_PATH_TO_CSS_RULES.get(item.iconPath);
+				} else {
+					const iconClass = ids.nextId();
+					createCSSRule(`.icon.${iconClass}`, `background-image: url("${URI.file(item.iconPath).toString()}")`);
+					MenuItemAction.ICON_PATH_TO_CSS_RULES.set(item.iconPath, iconClass);
+				}
 			} else {
-				createCSSRule(`.icon.${iconClass}`, `background-image: url("${URI.file(item.iconPath.light).toString()}")`);
-				createCSSRule(`.vs-dark .icon.${iconClass}, .hc-black .icon.${iconClass}`, `background-image: url("${URI.file(item.iconPath.dark).toString()}")`);
+				if (MenuItemAction.ICON_PATH_TO_CSS_RULES.has(item.iconPath.dark)) {
+					iconClass = MenuItemAction.ICON_PATH_TO_CSS_RULES.get(item.iconPath.dark);
+				} else {
+					const iconClass = ids.nextId();
+					createCSSRule(`.icon.${iconClass}`, `background-image: url("${URI.file(item.iconPath.light).toString()}")`);
+					createCSSRule(`.vs-dark .icon.${iconClass}, .hc-black .icon.${iconClass}`, `background-image: url("${URI.file(item.iconPath.dark).toString()}")`);
+					MenuItemAction.ICON_PATH_TO_CSS_RULES.set(item.iconPath.dark, iconClass);
+				}
 			}
 
 			this._cssClass = iconClass;
