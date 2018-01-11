@@ -7,7 +7,8 @@
 
 import { localize } from 'vs/nls';
 import { IKeybindingService } from 'vs/platform/keybinding/common/keybinding';
-import { IMenu, MenuItemAction, IMenuActionOptions } from 'vs/platform/actions/common/actions';
+import { IMenuActionOptions } from 'vs/platform/actions/common/actions';
+import { MenuItemAction } from 'vs/platform/actions/browser/menuItemAction';
 import { IMessageService } from 'vs/platform/message/common/message';
 import Severity from 'vs/base/common/severity';
 import { IAction } from 'vs/base/common/actions';
@@ -17,6 +18,7 @@ import { domEvent } from 'vs/base/browser/event';
 import { Emitter } from 'vs/base/common/event';
 import { IContextMenuService } from 'vs/platform/contextview/browser/contextView';
 import { memoize } from 'vs/base/common/decorators';
+import { IMenu } from 'vs/platform/actions/browser/menuService';
 
 class AltKeyEmitter extends Emitter<boolean> {
 

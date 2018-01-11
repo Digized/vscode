@@ -37,7 +37,7 @@ import {
 	StandaloneTelemetryService, SimpleWorkspaceContextService
 } from 'vs/editor/standalone/browser/simpleServices';
 import { ContextKeyService } from 'vs/platform/contextkey/browser/contextKeyService';
-import { IMenuService } from 'vs/platform/actions/common/actions';
+import { IMenuService } from 'vs/platform/actions/browser/menuService';
 import { IStandaloneThemeService } from 'vs/editor/standalone/common/standaloneThemeService';
 import { StandaloneThemeServiceImpl } from 'vs/editor/standalone/browser/standaloneThemeServiceImpl';
 

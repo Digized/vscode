@@ -4,18 +4,14 @@
  *--------------------------------------------------------------------------------------------*/
 'use strict';
 
-import { Action } from 'vs/base/common/actions';
+import { Action, IAction } from 'vs/base/common/actions';
 import { TPromise } from 'vs/base/common/winjs.base';
 import { SyncDescriptor0, createSyncDescriptor } from 'vs/platform/instantiation/common/descriptors';
-import { IConstructorSignature2, createDecorator } from 'vs/platform/instantiation/common/instantiation';
+import { IConstructorSignature2 } from 'vs/platform/instantiation/common/instantiation';
 import { IKeybindings } from 'vs/platform/keybinding/common/keybindingsRegistry';
-import { ContextKeyExpr, IContextKeyService } from 'vs/platform/contextkey/common/contextkey';
+import { ContextKeyExpr } from 'vs/platform/contextkey/common/contextkey';
 import { ICommandService } from 'vs/platform/commands/common/commands';
 import { IDisposable } from 'vs/base/common/lifecycle';
-import Event from 'vs/base/common/event';
-import { IdGenerator } from 'vs/base/common/idGenerator';
-import { createCSSRule } from 'vs/base/browser/dom';
-import URI from 'vs/base/common/uri';
 
 export interface ILocalizedString {
 	value: string;
@@ -69,20 +65,6 @@ export class MenuId {
 export interface IMenuActionOptions {
 	arg?: any;
 	shouldForwardArgs?: boolean;
-}
-
-export interface IMenu extends IDisposable {
-	onDidChange: Event<IMenu>;
-	getActions(options?: IMenuActionOptions): [string, MenuItemAction[]][];
-}
-
-export const IMenuService = createDecorator<IMenuService>('menuService');
-
-export interface IMenuService {
-
-	_serviceBrand: any;
-
-	createMenu(id: MenuId, scopedKeybindingService: IContextKeyService): IMenu;
 }
 
 export interface IMenuRegistry {
@@ -167,55 +149,8 @@ export class ExecuteCommandAction extends Action {
 	}
 }
 
-const ids = new IdGenerator('menu-item-action-icon-');
+export interface IMenuItemAction extends IAction {
 
-export class MenuItemAction extends ExecuteCommandAction {
-
-	private _options: IMenuActionOptions;
-
-	readonly item: ICommandAction;
-	readonly alt: MenuItemAction;
-
-	constructor(
-		item: ICommandAction,
-		alt: ICommandAction,
-		options: IMenuActionOptions,
-		@IContextKeyService contextKeyService: IContextKeyService,
-		@ICommandService commandService: ICommandService
-	) {
-		typeof item.title === 'string' ? super(item.id, item.title, commandService) : super(item.id, item.title.value, commandService);
-		this._enabled = !item.precondition || contextKeyService.contextMatchesRules(item.precondition);
-		this._options = options || {};
-
-		if (item.iconPath) {
-			const iconClass = ids.nextId();
-			if (typeof item.iconPath === 'string') {
-				createCSSRule(`.icon.${iconClass}`, `background-image: url("${URI.file(item.iconPath).toString()}")`);
-			} else {
-				createCSSRule(`.icon.${iconClass}`, `background-image: url("${URI.file(item.iconPath.light).toString()}")`);
-				createCSSRule(`.vs-dark .icon.${iconClass}, .hc-black .icon.${iconClass}`, `background-image: url("${URI.file(item.iconPath.dark).toString()}")`);
-			}
-
-			this._cssClass = iconClass;
-		}
-
-		this.item = item;
-		this.alt = alt ? new MenuItemAction(alt, undefined, this._options, contextKeyService, commandService) : undefined;
-	}
-
-	run(...args: any[]): TPromise<any> {
-		let runArgs: any[] = [];
-
-		if (this._options.arg) {
-			runArgs = [...runArgs, this._options.arg];
-		}
-
-		if (this._options.shouldForwardArgs) {
-			runArgs = [...runArgs, ...args];
-		}
-
-		return super.run(...runArgs);
-	}
 }
 
 export class SyncActionDescriptor {

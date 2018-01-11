@@ -37,7 +37,9 @@ import { KeyboardMapperFactory } from 'vs/workbench/services/keybinding/electron
 import { Themable } from 'vs/workbench/common/theme';
 import { ipcRenderer as ipc, webFrame } from 'electron';
 import { IWorkspaceEditingService } from 'vs/workbench/services/workspace/common/workspaceEditing';
-import { IMenuService, MenuId, IMenu, MenuItemAction, ICommandAction } from 'vs/platform/actions/common/actions';
+import { MenuId, ICommandAction } from 'vs/platform/actions/common/actions';
+import { IMenuService, IMenu } from 'vs/platform/actions/browser/menuService';
+import { MenuItemAction } from 'vs/platform/actions/browser/menuItemAction';
 import { IContextKeyService } from 'vs/platform/contextkey/common/contextkey';
 import { fillInActions } from 'vs/platform/actions/browser/menuItemActionItem';
 import { RunOnceScheduler } from 'vs/base/common/async';

@@ -31,14 +31,15 @@ import { IDisposable, IReference, ImmortalReference, combinedDisposable } from '
 import * as dom from 'vs/base/browser/dom';
 import { StandardKeyboardEvent } from 'vs/base/browser/keyboardEvent';
 import { KeybindingsRegistry, IKeybindingItem } from 'vs/platform/keybinding/common/keybindingsRegistry';
-import { MenuId, IMenu, IMenuService } from 'vs/platform/actions/common/actions';
-import { Menu } from 'vs/platform/actions/common/menu';
+import { MenuId } from 'vs/platform/actions/common/actions';
+import { Menu } from 'vs/platform/actions/browser/menu';
 import { ITelemetryService, ITelemetryInfo } from 'vs/platform/telemetry/common/telemetry';
 import { ResolvedKeybinding, Keybinding, createKeybinding, SimpleKeybinding } from 'vs/base/common/keyCodes';
 import { ResolvedKeybindingItem } from 'vs/platform/keybinding/common/resolvedKeybindingItem';
 import { OS } from 'vs/base/common/platform';
 import { IRange } from 'vs/editor/common/core/range';
 import { ITextModel } from 'vs/editor/common/model';
+import { IMenuService, IMenu } from 'vs/platform/actions/browser/menuService';
 
 export class SimpleEditor implements IEditor {
 

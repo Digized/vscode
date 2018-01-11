@@ -9,8 +9,10 @@ import Event, { Emitter } from 'vs/base/common/event';
 import { IDisposable, dispose } from 'vs/base/common/lifecycle';
 import { TPromise } from 'vs/base/common/winjs.base';
 import { ContextKeyExpr, IContextKeyService } from 'vs/platform/contextkey/common/contextkey';
-import { MenuId, MenuRegistry, MenuItemAction, IMenu, IMenuItem, IMenuActionOptions } from 'vs/platform/actions/common/actions';
+import { MenuId, MenuRegistry, IMenuItem, IMenuActionOptions } from 'vs/platform/actions/common/actions';
+import { MenuItemAction } from 'vs/platform/actions/browser/menuItemAction';
 import { ICommandService } from 'vs/platform/commands/common/commands';
+import { IMenu } from 'vs/platform/actions/browser/menuService';
 
 type MenuItemGroup = [string, IMenuItem[]];
 
